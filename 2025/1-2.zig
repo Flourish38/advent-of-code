@@ -9,7 +9,7 @@ pub fn main() !void {
     var reader = file.reader(&reader_buf);
     var pos_acc: i16 = 50;
     var zero_acc: u64 = 0;
-    var is_zero = false;
+    var was_zero = false;
     while (reader.interface.takeDelimiterExclusive('\r')) |line| {
         const relevant_offset = @max(1, line.len - 2);
         const relevant_digits = line[relevant_offset..];
@@ -21,10 +21,10 @@ pub fn main() !void {
             else => unreachable,
         }
         const fixed_acc = @mod(pos_acc, 100);
-        if (fixed_acc == 0 or (!is_zero and fixed_acc != pos_acc)) zero_acc += 1;
+        if (fixed_acc == 0 or (!was_zero and fixed_acc != pos_acc)) zero_acc += 1;
         // std.debug.print("{s}\t{d}\t{d}\t{any}\t{d}\n", .{ line, pos_acc, fixed_acc, is_zero, zero_acc });
         pos_acc = fixed_acc;
-        is_zero = pos_acc == 0;
+        was_zero = pos_acc == 0;
 
         const other_digits = line[1..relevant_offset];
         if (other_digits.len > 0)

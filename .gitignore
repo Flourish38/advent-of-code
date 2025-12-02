@@ -1,3 +1,5 @@
 */input
 */.zig-cache
 */zig-out
+*.exe
+*.pdb
