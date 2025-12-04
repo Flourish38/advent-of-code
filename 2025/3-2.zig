@@ -1,5 +1,16 @@
 const std = @import("std");
 
+// N = 6
+// 234234234234278
+//         >234278 4 234278
+//        >4 34278 3 434278
+//       > 4 34278 2 434278
+//      >  4 34278 4 434278
+//     >4  4  4278 3 444278
+//    > 4  4  4278 2 444278
+//   >  4  4  4278 4 444278
+//  >4  4  4  4 78   444478
+
 pub fn main() !void {
     var path_buf: [256]u8 = undefined;
     var cwd = std.fs.cwd();
@@ -11,15 +22,20 @@ pub fn main() !void {
     var reader = file.reader(&reader_buf);
     const N = 12;
     var total_joltage: u64 = 0;
+    var buf: [N]u8 = undefined;
     while (reader.interface.takeDelimiterExclusive('\r')) |line| {
         _ = try reader.interface.discard(.limited(2));
-        var start: usize = 0;
-        var buf: [N]u8 = undefined;
-        for (0..N) |digit| {
-            const i = std.mem.indexOfMax(u8, line[start .. line.len - (N - 1 - digit)]);
-            start += i;
-            buf[digit] = line[start];
-            start += 1;
+        @memcpy(&buf, line[line.len - N ..]);
+        var i = line.len - N;
+        while (i > 0) {
+            i -= 1;
+            var next = line[i];
+            for (&buf) |*d| {
+                const digit = d.*;
+                if (next < digit) break;
+                d.* = next;
+                next = digit;
+            }
         }
         const joltage = try std.fmt.parseUnsigned(u64, &buf, 10);
         // std.debug.print("{s}:\t{d}\n", .{ line, joltage });
