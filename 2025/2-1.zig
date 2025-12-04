@@ -27,11 +27,11 @@ pub fn main() !void {
         const first = if (first_slice.len != even_len)
             try std.math.powi(u64, 10, last_slice.len - 1)
         else
-            try std.fmt.parseInt(u64, first_slice, 10);
+            try std.fmt.parseUnsigned(u64, first_slice, 10);
         const last = if (last_slice.len != even_len)
             try std.math.powi(u64, 10, first_slice.len) - 1
         else
-            try std.fmt.parseInt(u64, last_slice, 10);
+            try std.fmt.parseUnsigned(u64, last_slice, 10);
         const invalid_factor = try std.math.powi(u64, 10, even_len / 2) + 1;
         // if `first` is divided exactly by `invalid_factor`, it must be included
         const first_divided = first / invalid_factor + @min(1, @mod(first, invalid_factor)) - 1;

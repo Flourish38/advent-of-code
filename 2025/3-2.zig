@@ -21,7 +21,7 @@ pub fn main() !void {
             buf[digit] = line[start];
             start += 1;
         }
-        const joltage = try std.fmt.parseInt(u64, &buf, 10);
+        const joltage = try std.fmt.parseUnsigned(u64, &buf, 10);
         // std.debug.print("{s}:\t{d}\n", .{ line, joltage });
         total_joltage += joltage;
     } else |err| switch (err) {

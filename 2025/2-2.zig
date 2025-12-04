@@ -41,11 +41,11 @@ pub fn main() !void {
             const first = if (first_slice.len != round_len)
                 try std.math.powi(i64, 10, @intCast(last_slice.len - 1))
             else
-                try std.fmt.parseInt(i64, first_slice, 10);
+                try std.fmt.parseUnsigned(i64, first_slice, 10);
             const last = if (last_slice.len != round_len)
                 try std.math.powi(i64, 10, @intCast(first_slice.len)) - 1
             else
-                try std.fmt.parseInt(i64, last_slice, 10);
+                try std.fmt.parseUnsigned(i64, last_slice, 10);
             const invalid_factor = blk: {
                 var factor_acc: i64 = 1;
                 for (1..n_repetitions) |i| {

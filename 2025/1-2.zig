@@ -16,7 +16,7 @@ pub fn main() !void {
         const relevant_offset = @max(1, line.len - 2);
         const relevant_digits = line[relevant_offset..];
 
-        const parsed = try std.fmt.parseInt(i16, relevant_digits, 10);
+        const parsed = try std.fmt.parseUnsigned(i16, relevant_digits, 10);
         switch (line[0]) {
             'R' => pos_acc += parsed,
             'L' => pos_acc -= parsed,
@@ -30,7 +30,7 @@ pub fn main() !void {
 
         const other_digits = line[1..relevant_offset];
         if (other_digits.len > 0)
-            zero_acc += try std.fmt.parseInt(u8, other_digits, 10);
+            zero_acc += try std.fmt.parseUnsigned(u8, other_digits, 10);
 
         _ = try reader.interface.discard(.limited(2));
     } else |err| switch (err) {

@@ -13,7 +13,7 @@ pub fn main() !void {
     var zero_acc: u64 = 0;
     while (reader.interface.takeDelimiterExclusive('\r')) |line| {
         const relevant_digits: []const u8 = if (line.len == 2) line[1..2] else line[line.len - 2 .. line.len];
-        const parsed = try std.fmt.parseInt(i16, relevant_digits, 0);
+        const parsed = try std.fmt.parseUnsigned(i16, relevant_digits, 0);
         switch (line[0]) {
             'R' => pos_acc += parsed,
             'L' => pos_acc -= parsed,
