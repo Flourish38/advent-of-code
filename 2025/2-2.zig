@@ -3,7 +3,7 @@ const assert = std.debug.assert;
 
 pub fn main() !void {
     var path_buf: [256]u8 = undefined;
-    const cwd = std.fs.cwd();
+    var cwd = std.fs.cwd();
     defer cwd.close();
     const path = try cwd.realpath("input/2.txt", &path_buf);
     const file = try std.fs.openFileAbsolute(path, .{});
