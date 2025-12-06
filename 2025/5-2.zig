@@ -3,6 +3,9 @@ const assert = std.debug.assert;
 
 const input = @embedFile("input/5.txt");
 
+const data_size = 13;
+var buffer: [1 << data_size]u8 = undefined;
+
 fn binarySearchHighestLeq(items: []u64, target: u64) usize {
     var lo: usize = 0;
     var hi = items.len;
@@ -22,11 +25,17 @@ const SortCtx = struct {
 };
 
 pub fn main() !void {
-    var gpa: std.heap.DebugAllocator(.{}) = .init;
-    defer assert(gpa.deinit() == .ok);
-    const allocator = gpa.allocator();
+    var timer = try std.time.Timer.start();
+
+    // var gpa: std.heap.DebugAllocator(.{}) = .init;
+    // defer assert(gpa.deinit() == .ok);
+    // const allocator = gpa.allocator();
+
+    var fba: std.heap.FixedBufferAllocator = .init(&buffer);
+    const allocator = fba.allocator();
 
     var ranges_list: std.MultiArrayList(struct { start: u64, end: u64 }) = .empty;
+    try ranges_list.ensureUnusedCapacity(allocator, 1 << (data_size - 4) - 1);
     defer ranges_list.deinit(allocator);
 
     var current_number: u64 = 0;
@@ -45,7 +54,7 @@ pub fn main() !void {
                     range_start = i + 1;
                     break;
                 }
-                try ranges_list.append(allocator, .{ .start = range_start, .end = current_number });
+                ranges_list.appendAssumeCapacity(.{ .start = range_start, .end = current_number });
                 current_number = 0;
                 saw_newline = true;
             },
@@ -85,5 +94,5 @@ pub fn main() !void {
         acc += end - start + 1;
     }
 
-    std.debug.print("{d}\n", .{acc});
+    std.debug.print("{D}\n{d}\n", .{ timer.lap(), acc });
 }
