@@ -2,6 +2,7 @@ const std = @import("std");
 const assert = std.debug.assert;
 
 pub fn main() !void {
+    var timer = try std.time.Timer.start();
     var path_buf: [256]u8 = undefined;
     var cwd = std.fs.cwd();
     defer cwd.close();
@@ -43,5 +44,5 @@ pub fn main() !void {
         error.EndOfStream => {},
         else => return err,
     }
-    std.debug.print("{d}\n", .{acc});
+    std.debug.print("{D}\n{d}\n", .{ timer.lap(), acc });
 }

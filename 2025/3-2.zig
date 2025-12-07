@@ -12,6 +12,7 @@ const std = @import("std");
 //  >4  4  4  4 78   444478
 
 pub fn main() !void {
+    var timer = try std.time.Timer.start();
     var path_buf: [256]u8 = undefined;
     var cwd = std.fs.cwd();
     defer cwd.close();
@@ -44,5 +45,5 @@ pub fn main() !void {
         error.EndOfStream => {},
         else => return err,
     }
-    std.debug.print("{d}", .{total_joltage});
+    std.debug.print("{D}\n{d}\n", .{ timer.lap(), total_joltage });
 }

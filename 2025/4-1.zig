@@ -4,6 +4,7 @@ const assert = std.debug.assert;
 const input = @embedFile("input/4.txt");
 
 pub fn main() !void {
+    var timer = try std.time.Timer.start();
     var acc: usize = 0;
     var lines: [3][]const u8 = @splat(&.{});
     var it = std.mem.tokenizeAny(u8, input, "\r\n");
@@ -33,5 +34,5 @@ pub fn main() !void {
         // std.debug.print("{s}\n{s}\n{s}\n{s}\n\n", .{ lines[0], lines[1], lines[2], test_line });
         // test_line = @splat(' ');
     }
-    std.debug.print("{d}", .{acc});
+    std.debug.print("{D}\n{d}", .{ timer.lap(), acc });
 }

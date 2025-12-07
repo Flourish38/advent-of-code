@@ -3,13 +3,20 @@ const assert = std.debug.assert;
 
 const _input = @embedFile("input/4.txt");
 
-pub fn main() !void {
-    var gpa: std.heap.DebugAllocator(.{}) = .init;
-    defer assert(gpa.deinit() == .ok);
-    var alloc = gpa.allocator();
+var buffer: [1 << 15]u8 = undefined;
 
-    const input = try alloc.dupe(u8, _input);
-    defer alloc.free(input);
+pub fn main() !void {
+    var timer = try std.time.Timer.start();
+
+    // var gpa: std.heap.DebugAllocator(.{}) = .init;
+    // defer assert(gpa.deinit() == .ok);
+    // var alloc = gpa.allocator();
+
+    var fba: std.heap.FixedBufferAllocator = .init(&buffer);
+    const allocator = fba.allocator();
+
+    const input = try allocator.dupe(u8, _input);
+    defer allocator.free(input);
 
     var acc: usize = 0;
     var any_change = true;
@@ -56,5 +63,5 @@ pub fn main() !void {
         }
     }
 
-    std.debug.print("{d}", .{acc});
+    std.debug.print("{D}\n{d}", .{ timer.lap(), acc });
 }
