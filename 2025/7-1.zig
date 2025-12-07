@@ -6,7 +6,7 @@ const input = @embedFile("input/7.txt");
 pub fn main() !void {
     var timer = try std.time.Timer.start();
 
-    var live: std.bit_set.IntegerBitSet(256) = .initEmpty();
+    var live: [256]bool = @splat(false);
     var left: usize = undefined;
     var right: usize = undefined;
 
@@ -14,7 +14,7 @@ pub fn main() !void {
         for (input, 0..) |c, i| {
             switch (c) {
                 'S' => {
-                    live.set(i);
+                    live[i] = true;
                     left = i;
                     right = i + 1;
                 },
@@ -33,11 +33,11 @@ pub fn main() !void {
         const line_offset = line_number * line_len;
         const line = input[line_offset + left .. line_offset + right];
         for (line, left..) |c, i| {
-            if (c == '^' and live.isSet(i)) {
+            if (c == '^' and live[i]) {
                 acc += 1;
-                live.unset(i);
-                live.set(i - 1);
-                live.set(i + 1);
+                live[i] = false;
+                live[i - 1] = true;
+                live[i + 1] = true;
                 if (i == left) left -= 1;
                 if (i == right - 1) right += 1;
             }

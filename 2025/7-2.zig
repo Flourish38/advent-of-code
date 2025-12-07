@@ -28,14 +28,11 @@ pub fn main() !void {
 
     const n_lines = input.len / line_len;
 
-    // var acc: u64 = 0;
-
     for (1..n_lines) |line_number| {
         const line_offset = line_number * line_len;
         const line = input[line_offset + left .. line_offset + right];
         for (line, left..) |c, i| {
             if (c == '^' and live[i] > 0) {
-                // acc += 1;
                 // std.debug.print("{d}\t{d} {d} {d}\n", .{ i, live[i - 1], live[i], live[i + 1] });
                 live[i - 1] += live[i];
                 live[i + 1] += live[i];
@@ -47,6 +44,7 @@ pub fn main() !void {
     }
 
     std.debug.print("{D}\n{d}\n", .{
-        timer.lap(), @reduce(.Add, @as(@Vector(256, u64), live)),
+        timer.lap(),
+        @reduce(.Add, @as(@Vector(256, u64), live)),
     });
 }
